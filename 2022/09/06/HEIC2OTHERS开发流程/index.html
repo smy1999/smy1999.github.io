@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 5.4.2">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/all.min.css" integrity="sha256-xejo6yLi6vGtAjcMIsY8BHdKsLg7QynVlFMzdQgUuy8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"example.com","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.12.3","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="首先的首先，放一下成品。 前言苹果推出的HEIC格式图片，在图像压缩率方面有极大的优势，比JPG格式图片占用空间小、画质更优。上传百度网盘时，保持原有HEIC格式上传，但在Windows系统下载时，仍然是HEIC，但HEIC对Windows支持不佳，因此还是需要转换为传统JPG格式图片。 由于需求是我母亲提出来的，较为硬核向的工具、需要一定代码基础的工具不可行，需要能够直接使用的。为此，我考虑过多">
+<meta property="og:type" content="article">
+<meta property="og:title" content="HEIC2OTHERS开发流程">
+<meta property="og:url" content="http://example.com/2022/09/06/HEIC2OTHERS%E5%BC%80%E5%8F%91%E6%B5%81%E7%A8%8B/index.html">
+<meta property="og:site_name" content="smy1999">
+<meta property="og:description" content="首先的首先，放一下成品。 前言苹果推出的HEIC格式图片，在图像压缩率方面有极大的优势，比JPG格式图片占用空间小、画质更优。上传百度网盘时，保持原有HEIC格式上传，但在Windows系统下载时，仍然是HEIC，但HEIC对Windows支持不佳，因此还是需要转换为传统JPG格式图片。 由于需求是我母亲提出来的，较为硬核向的工具、需要一定代码基础的工具不可行，需要能够直接使用的。为此，我考虑过多">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2022-09-06T08:34:05.000Z">
+<meta property="article:modified_time" content="2022-09-06T08:35:58.393Z">
+<meta property="article:author" content="Mingyue Shao">
+<meta property="article:tag" content="前端; HTML; JavaScript">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="http://example.com/2022/09/06/HEIC2OTHERS%E5%BC%80%E5%8F%91%E6%B5%81%E7%A8%8B/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"http://example.com/2022/09/06/HEIC2OTHERS%E5%BC%80%E5%8F%91%E6%B5%81%E7%A8%8B/","path":"2022/09/06/HEIC2OTHERS开发流程/","title":"HEIC2OTHERS开发流程"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>HEIC2OTHERS开发流程 | smy1999</title>
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">smy1999</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">h0w4b0utW41kT0g3</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BE%9D%E8%B5%96%E5%AE%89%E8%A3%85"><span class="nav-number">2.</span> <span class="nav-text">依赖安装</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%BD%AC%E6%8D%A2%E8%BF%87%E7%A8%8B"><span class="nav-number">3.</span> <span class="nav-text">转换过程</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%89%8D%E7%AB%AF%E9%A1%B5%E9%9D%A2"><span class="nav-number">4.</span> <span class="nav-text">前端页面</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E4%BC%A0%E9%80%92"><span class="nav-number">5.</span> <span class="nav-text">数据传递</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86"><span class="nav-number">6.</span> <span class="nav-text">数据处理</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%83%A8%E7%BD%B2"><span class="nav-number">7.</span> <span class="nav-text">部署</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BF%AE%E6%94%B9%E5%85%B3%E9%94%AE%E6%B5%81%E7%A8%8B"><span class="nav-number">8.</span> <span class="nav-text">修改关键流程</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BC%98%E5%8C%96%E6%96%B9%E5%90%91"><span class="nav-number">9.</span> <span class="nav-text">优化方向</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Reference"><span class="nav-number">10.</span> <span class="nav-text">Reference</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Mingyue Shao</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">5</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/09/06/HEIC2OTHERS%E5%BC%80%E5%8F%91%E6%B5%81%E7%A8%8B/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Mingyue Shao">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="smy1999">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="HEIC2OTHERS开发流程 | smy1999">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          HEIC2OTHERS开发流程
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+      
+
+      <time title="Created: 2022-09-06 16:34:05 / Modified: 16:35:58" itemprop="dateCreated datePublished" datetime="2022-09-06T16:34:05+08:00">2022-09-06</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p>首先的首先，放一下<a target="_blank" rel="noopener" href="https://smy1999.github.io/heic2others/">成品</a>。</p>
+<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>苹果推出的HEIC格式图片，在图像压缩率方面有极大的优势，比JPG格式图片占用空间小、画质更优。上传百度网盘时，保持原有HEIC格式上传，但在Windows系统下载时，仍然是HEIC，但HEIC对Windows支持不佳，因此还是需要转换为传统JPG格式图片。</p>
+<p>由于需求是我母亲提出来的，较为硬核向的工具、需要一定代码基础的工具不可行，需要能够直接使用的。为此，我考虑过多种解决方法，但是现有的工具中，都有我不喜欢的部分。我讨厌需要下载的工具，因为它们几乎都含有大量广告，或者大量不需要的冗余功能；在线的转换网站往往上传速度堪忧，并且安全性也得不到保障。</p>
+<p>我首先考虑到的解决方式是使用Python或Java开发一个小客户端，因为有这方面的基础，以前也给我母亲写过办公自动化的工具，但是Python和Java的打包较为麻烦，工具的体量也十分巨大。虽然这个问题是可以容忍的问题，但是实际刚着手，便发现 <code>pyheif</code>工具仅支持Mac或Linux操作系统，作者也明确说明了不会支持Windows，因此这种方法也排除了。</p>
+<p>后来我又去网上寻找解决方案，比较多的解决方案是基于 <a target="_blank" rel="noopener" href="https://github.com/alexcorvi/heic2any">heif2any</a>，也提供了相应的在线转换工具，但是示例网站只能转换GIF格式，不能完全满足需求。</p>
+<p>我以前没有接触过前端的一切东西，唯一在本科选修过面向包括文体美专业在内的所有人开放的动态网站制作课，现在回看，就是上课做了一个静态网页，用markdown完全可以胜任这个课上的全部内容。由于零基础，不是很确定自己能完成这个工具的开发。</p>
+<p>不过解决方案仅此一个，也正好最近对开发感兴趣，同时学学前端的东西，经过一天多的折腾，解决了大大小小的bug，终于是开发完成了。中间很多问题都没有记下来，要么随手解决了，要么尝试了无数种解决方案之后难以静下心来归纳。</p>
+<p>本文是这个工具的开发流程，并不全面，仅供参考。</p>
+<h1 id="依赖安装"><a href="#依赖安装" class="headerlink" title="依赖安装"></a>依赖安装</h1><p>在对应Project的文件夹内安装 <code>heic2any</code> </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install heic2any</span><br></pre></td></tr></table></figure>
+
+<p>自动局部安装于 <code>node_modules</code> 文件夹内，同时生成 <code>package.json</code> 和 <code>package-lock.json</code> 文件</p>
+<h1 id="转换过程"><a href="#转换过程" class="headerlink" title="转换过程"></a>转换过程</h1><p>参考<a target="_blank" rel="noopener" href="https://github.com/alexcorvi/heic2any/blob/master/docs/getting-started.md">https://github.com/alexcorvi/heic2any/blob/master/docs/getting-started.md</a>提供的转换过程</p>
+<p>将转换过程写在新的 <code>.js</code> 文件中，在 <code>html</code> 中通过 <code>&lt;script src=&quot;&quot;&gt;</code> 的方式引入脚本文件</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">&quot;module&quot;</span> <span class="attr">src</span>=<span class="string">&quot;./heics2jpgs.js&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>使用<a target="_blank" rel="noopener" href="https://github.com/alexcorvi/heic2any/blob/master/docs/getting-started.md">官方doc</a>的示例代码，以及<a target="_blank" rel="noopener" href="https://www.mulingyuer.com/archives/553/">此文</a>对于Fetch中下载Blob的应用示例，可以运行代码</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">fetch(para_path)</span><br><span class="line">	  .then(<span class="function">(<span class="params">res</span>) =&gt;</span> res.blob())</span><br><span class="line">	  .then(<span class="function">(<span class="params">blob</span>) =&gt;</span></span><br><span class="line">	      heic2any(&#123;</span><br><span class="line">	          blob,</span><br><span class="line">	          <span class="attr">toType</span>: para_format,</span><br><span class="line">	          <span class="attr">quality</span> : para_rate</span><br><span class="line">	      &#125;)</span><br><span class="line">	  )</span><br><span class="line">	  .then(<span class="function">(<span class="params">conversionResult</span>) =&gt;</span> &#123;</span><br><span class="line">	      <span class="comment">// conversionResult is a BLOB</span></span><br><span class="line">	      <span class="comment">// of the PNG formatted image</span></span><br><span class="line">	      <span class="keyword">let</span> a = <span class="built_in">document</span>.createElement(<span class="string">&quot;a&quot;</span>);</span><br><span class="line">	      a.href = URL.createObjectURL(conversionResult);</span><br><span class="line">	      a.download = file_name + <span class="string">&quot;.&quot;</span> + file_type;</span><br><span class="line">	      a.style.display = <span class="string">&quot;none&quot;</span>;</span><br><span class="line">	      <span class="built_in">document</span>.body.appendChild(a);</span><br><span class="line">	      a.click();</span><br><span class="line">	      URL.revokeObjectURL(a.href); <span class="comment">// 释放URL 对象</span></span><br><span class="line">	      a.remove();</span><br><span class="line">	  &#125;)</span><br><span class="line">	  .catch(<span class="function">(<span class="params">e</span>) =&gt;</span> &#123;</span><br><span class="line">	      <span class="comment">// see error handling section</span></span><br><span class="line">	      <span class="built_in">console</span>.log(e);</span><br><span class="line">	  &#125;);</span><br></pre></td></tr></table></figure>
+
+<p>经过测试，原图尺寸约为2.8M时，转为JPG后图像尺寸约为18M，这是由于HEIC的先进压缩算法，使得原图可以很小，而转为JPG后压缩算法的压缩率下降，是正常现象。</p>
+<h1 id="前端页面"><a href="#前端页面" class="headerlink" title="前端页面"></a>前端页面</h1><p>在写好前端页面中的几个选项之后，开始考虑js和HTML的交互，其中遇到了各种问题，包括依赖包格式、找不到对应函数等。</p>
+<p>经过各种暴露包、修改路径的尝试，未果，发现在 <code>&lt;script&gt;</code> 中定义 <code>type=&quot;module&quot;</code> 后，便无法和 <code>&lt;button&gt;</code> 的 <code>onclick</code> 进行交互了。</p>
+<p><a target="_blank" rel="noopener" href="https://nibes.cn/blog/24595">同类问题</a></p>
+<p>最终，不适用外部js文件，而是在 <code>html</code> 内部使用，通过 <code>import</code> 的方式引入</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123;convert&#125; <span class="keyword">from</span> <span class="string">&#x27;./convert.js&#x27;</span>;</span><br><span class="line"><span class="built_in">document</span>.querySelector(<span class="string">&#x27;#hello&#x27;</span>).addEventListener(<span class="string">&#x27;click&#x27;</span>, convert)</span><br></pre></td></tr></table></figure>
+
+<p>成功引入，能够调用对应 <code>import</code> 的js文件中的方法</p>
+<h1 id="数据传递"><a href="#数据传递" class="headerlink" title="数据传递"></a>数据传递</h1><p>在 <code>html</code> 中获取的信息，需要传递到 <code>.js</code> 文件中</p>
+<p>前端收集信息的模块有唯一的Attribute <code>id</code> ，因此可以在<code>.js</code> 文件中获取</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">document</span>.getElementById(<span class="string">&quot;element_id&quot;</span>).value;</span><br></pre></td></tr></table></figure>
+
+<p>根据参考中的内容，这部分好像并不算参数传递，而是直接获取到的</p>
+<h1 id="数据处理"><a href="#数据处理" class="headerlink" title="数据处理"></a>数据处理</h1><p>传递来的信息有压缩率、图片路径、目标格式，需要对其进行预处理</p>
+<ul>
+<li><p>目标格式</p>
+<p>  目标格式在前端已经进行过处理，用户选择后传递的值即为 <code>image/jpg</code> 字符串，无需额外处理</p>
+</li>
+<li><p>图片路径</p>
+<p>  路径传递后，接收到的文件名是正常的，但是路径是有问题的，会有 <code>c:\fakepath\</code> ，是错误的绝对路径。</p>
+<p>  暂时先不处理，使用与 <code>html</code> 同路径的方法</p>
+<p>  如果通过</p>
+  <figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">document</span>.getElementById(<span class="string">&quot;files&quot;</span>).value;</span><br></pre></td></tr></table></figure>
+<p>  则获取的是第一个文件带有 <code>fakepath</code> 的路径，因此需要使用 <code>files</code> 属性获取multiple</p>
+</li>
+<li><p>压缩率</p>
+<p>  压缩率通过 <code>parseFloat()</code> 更改格式</p>
+</li>
+</ul>
+<h1 id="部署"><a href="#部署" class="headerlink" title="部署"></a>部署</h1><p>新建一个Git项目 <code>heic2others</code>，增加Page界面</p>
+<p>此后就可以通过 <a target="_blank" rel="noopener" href="http://smy1999.github.io/heic2others/">smy1999.github.io&#x2F;heic2others&#x2F;</a> 访问了</p>
+<p>遇到了GItHub Pages无法读取 <code>node_modules</code> 下js文件的问题，已解决</p>
+<h1 id="修改关键流程"><a href="#修改关键流程" class="headerlink" title="修改关键流程"></a>修改关键流程</h1><p>上线部署到Github Pages后，发现fetch只能读取url，不能读取本地文件，之前在本地测试的时候，文件也都是在Project的目录中，使用绝对路径之后发现并不能成功读取到文件，于是决定不再使用heic2any提供的流程。</p>
+<p>事实上，从 <code>&lt;input type=&quot;file&quot; multiple&gt;</code> 读取到的已经是 <code>FileList</code> 格式的文件信息，文件已经被读入前端了，此前的方式多此一举地从文件中提取了文件名，再次使用 <code>Fetch</code> 加载文件。</p>
+<p>由于 <code>heic2any</code> 的输入是 <code>blob</code> 或 <code>blob[]</code>，起初考虑将 <code>FIle</code> 转换为 <code>blob</code> 输入，经过查询发现， <code>File</code> 已经是 <code>blob</code> 的子类，因此直接将 <code>File</code> 和其他参数传入 <code>heic2any</code> 。</p>
+<p><code>heic2any</code> 的返回值是 <code>Promise&lt;blob | blob[]&gt;</code> 的格式，通过 <code>.then()</code> 的方式获取其 <code>PromiseResult</code> 属性值，也就是转换后的 <code>blob</code>，将这个 <code>blob</code> 再使用 <code>URL</code>下载。</p>
+<h1 id="优化方向"><a href="#优化方向" class="headerlink" title="优化方向"></a>优化方向</h1><ul>
+<li><input disabled="" type="checkbox"> 文件批量下载</li>
+<li><input disabled="" type="checkbox"> 前端界面优化</li>
+<li><input disabled="" type="checkbox"> 稳定性增强</li>
+</ul>
+<h1 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h1><p><a target="_blank" rel="noopener" href="https://www.mulingyuer.com/archives/553/">https://www.mulingyuer.com/archives/553/</a></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/alexcorvi/heic2any/blob/master/docs/getting-started.md">https://github.com/alexcorvi/heic2any/blob/master/docs/getting-started.md</a></p>
+<p>值传递：<a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/21397743/passing-html-input-value-as-a-javascript-function-parameter">https://stackoverflow.com/questions/21397743/passing-html-input-value-as-a-javascript-function-parameter</a></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E5%89%8D%E7%AB%AF-HTML-JavaScript/" rel="tag"># 前端; HTML; JavaScript</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2022/09/01/Hexo%E6%96%87%E7%AB%A0/" rel="prev" title="Hexo文章">
+                  <i class="fa fa-chevron-left"></i> Hexo文章
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments gitalk-container"></div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mingyue Shao</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/gitalk/1.7.2/gitalk.css" integrity="sha256-AJnUHL7dBv6PGaeyPQJcgQPDjt/Hn/PvYZde1iqfp8U=" crossorigin="anonymous">
+
+<script class="next-config" data-name="gitalk" type="application/json">{"enable":true,"github_id":"smy1999","repo":"smy1999.github.io","client_id":"df6ddca4b2b4ada67837","client_secret":"32e2934effcddd29ca0eae873a1c09fa36844a38","admin_user":"smy1999","distraction_free_mode":true,"proxy":"https://cors-anywhere.azm.workers.dev/https://github.com/login/oauth/access_token","language":"zh-CN","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/gitalk/1.7.2/gitalk.min.js","integrity":"sha256-Pmj85ojLaPOWwRtlMJwmezB/Qg8BzvJp5eTzvXaYAfA="},"path_md5":"a7a2499bbf52c27e0ea3b1c14c686a05"}</script>
+<script src="/js/third-party/comments/gitalk.js"></script>
+
+</body>
+</html>
