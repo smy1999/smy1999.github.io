@@ -121,12 +121,12 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">5</span>
+          <span class="site-state-item-count">6</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
-        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-count">8</span>
         <span class="site-state-item-name">tags</span>
       </div>
   </nav>
@@ -155,6 +155,96 @@
 
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/09/20/%E9%80%9A%E8%BF%87%E8%B7%AF%E7%94%B1%E5%99%A8%E7%AB%AF%E5%8F%A3%E8%BD%AC%E5%8F%91%E5%AE%9E%E7%8E%B0%E5%A4%96%E7%BD%91SSH%E8%AE%BF%E9%97%AE%E5%B1%80%E5%9F%9F%E7%BD%91%E6%9C%8D%E5%8A%A1%E5%99%A8/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Mingyue Shao">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="smy1999">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | smy1999">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2022/09/20/%E9%80%9A%E8%BF%87%E8%B7%AF%E7%94%B1%E5%99%A8%E7%AB%AF%E5%8F%A3%E8%BD%AC%E5%8F%91%E5%AE%9E%E7%8E%B0%E5%A4%96%E7%BD%91SSH%E8%AE%BF%E9%97%AE%E5%B1%80%E5%9F%9F%E7%BD%91%E6%9C%8D%E5%8A%A1%E5%99%A8/" class="post-title-link" itemprop="url">通过路由器端口转发实现外网SSH访问局域网服务器</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+      
+
+      <time title="Created: 2022-09-20 09:05:34 / Modified: 17:19:10" itemprop="dateCreated datePublished" datetime="2022-09-20T09:05:34+08:00">2022-09-20</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>近期在学习MySQL，完成了Mac端的学习，开始学习服务器部署的进阶内容。起初不打算实际操作了，在本地Mac端实验或者云了内容即可。但仔细想感觉如果没有实地部署操作，经历过程，总是没有什么竞争力，以后实操也会出问题，于是还是打算部署一下。</p>
+<p>考虑在宿舍Windows系统安装虚拟机部署，在实验室远程访问宿舍的虚拟机，但是远程桌面的卡顿不能接受，也懒得再弄个路由器解决IP问题，于是这个方式否定了。实验室有好几台服务器，直接在上面装，然后局域网环境内SSH连接，是我想到的很好的解决方法。</p>
+<p>因此昨天花了一晚上解决Ubuntu的MySQL8.0安装，也大费周章。</p>
+<p>由于需要在宿舍学习，此时无法直接访问局域网内的服务器，考虑解决这个问题。问了实验室的<a target="_blank" rel="noopener" href="https://dennisyu.top/">朋友</a>，他不给我解决，但是提供了一些方法。于是我自己搜了一些内网穿透、端口转发的相关内容，需要在服务器端安装工具或者使用成品商业软件，都不是我想要的。此时想到朋友之前让我测试过在宿舍访问他在局域网内树莓派上部署的Blog，是一个不错的方向，之前有印象是他通过路由器转发实现的，于是我也尝试一下。</p>
+<p>经过一番折腾和交流，花了大概一个半小时的时间解决了这个问题</p>
+<h1 id="路由器端口转发"><a href="#路由器端口转发" class="headerlink" title="路由器端口转发"></a>路由器端口转发</h1><p>在路由器管理界面有虚拟服务器的功能，设置服务器端口和IP地址。局域网外访问该路由器的IP地址和服务端口，会被转发到端口转发指定的局域网内IP地址和<strong>相同端口</strong>。</p>
+<p><img src="/images/router_manager.png" alt="路由器管理界面"></p>
+<p>原来我以为路由器的服务端口和目标IP地址的端口是不同的，没有找到如何继续修改端口的方式。经过实验，发现在局域网外可以用不指定端口，使用默认端口22访问到朋友的树莓派，而不能指定端口访问到我想要访问到内容。</p>
+<p>这里还踩了Ubuntu如何对外开放端口、Ubuntu防火墙的坑。问了朋友才知道，我以为的两个不同端口其实是绑定的，须是同一端口。</p>
+<p>因为SSH的默认22端口转发已经被树莓派占用，路由器不能再指定访问服务器的22端口，我想要通过SSH访问服务器，只能是修改服务器上SSH的默认端口，并在端口转发进行设置。</p>
+<p>这里走了捷径，直接让<a target="_blank" rel="noopener" href="https://dennisyu.top/">朋友</a>把树莓派的SSH端口改了，我就直接用了默认22端口</p>
+<h1 id="密钥问题"><a href="#密钥问题" class="headerlink" title="密钥问题"></a>密钥问题</h1><p>在局域网外测试访问配置的服务器，遇到了问题</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@</span><br><span class="line">@    WARNING: REMOTE HOST IDENTIFICATION HAS CHANGED!     @</span><br><span class="line">@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@</span><br><span class="line">IT IS POSSIBLE THAT SOMEONE IS DOING SOMETHING NASTY!</span><br><span class="line">Someone could be eavesdropping on you right now (man-in-the-middle attack)!</span><br><span class="line">It is also possible that a host key has just been changed.</span><br><span class="line">The fingerprint <span class="keyword">for</span> the RSA key sent by the remote host is</span><br><span class="line">[...].</span><br><span class="line">Please contact your system administrator.</span><br><span class="line">Add correct host key <span class="keyword">in</span> */.ssh/known_hosts to get rid of this message.</span><br><span class="line">Offending RSA key <span class="keyword">in</span>*d/.ssh/known_hosts:86</span><br><span class="line">RSA host key <span class="keyword">for</span> [...] has changed and you have requested strict checking.</span><br><span class="line">Host key verification failed.</span><br></pre></td></tr></table></figure>
+
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/yjk13703623757/article/details/81290185">查询</a>和问了<a target="_blank" rel="noopener" href="https://dennisyu.top/">朋友</a>发现是因为用这个IP和端口SSH过树莓派，而修改到服务器后，密钥发生了变化，因此删除已有密钥，即可以成功访问服务器。</p>
+<h1 id="改进方向"><a href="#改进方向" class="headerlink" title="改进方向"></a>改进方向</h1><ul>
+<li>修改服务器SSH默认端口</li>
+<li>配置免密登录</li>
+</ul>
+<h1 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h1><p>写完发现其中技术要点不多，主要还是文字表达-。-当个故事看吧。</p>
+<p>最后，感谢<a target="_blank" rel="noopener" href="https://dennisyu.top/">小玉</a>。</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
